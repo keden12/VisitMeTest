@@ -34,6 +34,13 @@ app.put('/listings/:id/love', listings.incrementHeart);
 
 app.put('/listings/:id/changetitle', listings.changeTitle);
 app.put('/listings/:id/changedesc', listings.changeDescription);
+app.put('/listings/:id/changefeatured', listings.changeFeatured);
+
+app.post('/listings',listings.addListing);
+app.post('/listings/search', listings.searchListings);
+
+app.delete('/listings/:id', listings.deleteListingByID);
+app.delete('/listings/title/:title', listings.deleteListingByTitle);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
