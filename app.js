@@ -25,7 +25,15 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 
-app.get('/listings', listings.findAll);
+app.get('/listings', listings.findListings);
+app.get('/listings/:id', listings.findByID);
+app.get('/listings/title/:title', listings.findByTitle);
+app.get('/listings/category/:category', listings.findByCategory);
+
+app.put('/listings/:id/love', listings.incrementHeart);
+
+app.put('/listings/:id/changetitle', listings.changeTitle);
+app.put('/listings/:id/changedesc', listings.changeDescription);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
