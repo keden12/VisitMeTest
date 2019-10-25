@@ -4,8 +4,9 @@ var Fuse = require('fuse.js');
 var listings = require('../models/listings');
 let router = express.Router();
 
+var mongoUri = 'mongodb+srv://keden12:ro13pedal@visitme-cluster-nt7jq.mongodb.net/visitme?retryWrites=true&w=majority'
 
-mongoose.connect('mongodb://localhost:27017/visitme');
+mongoose.connect(mongoUri);
 
 let db = mongoose.connection;
 
