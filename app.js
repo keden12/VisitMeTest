@@ -26,9 +26,14 @@ app.use('/users', usersRouter);
 
 
 app.get('/listings', listings.findListings);
+
+app.get('/listings/total', listings.findTotalListings);
+app.get('/listings/:category/total', listings.findTotalListingsByCategory);
+
 app.get('/listings/:id', listings.findByID);
 app.get('/listings/title/:title', listings.findByTitle);
 app.get('/listings/category/:category', listings.findByCategory);
+
 
 app.put('/listings/:id/love', listings.incrementHeart);
 

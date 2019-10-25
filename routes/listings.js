@@ -39,9 +39,36 @@ router.findListings = (req, res) => {
 
     listings.find(function(err, listing) {
         if (err)
-            res.send(err);
+            res.send('Error searching for listings!');
 
         res.send(JSON.stringify(listing,null,5));
+    });
+}
+
+
+router.findTotalListings = (req, res) => {
+    // Return a JSON representation of our list
+    res.setHeader('Content-Type', 'application/json');
+
+    listings.find(function(err, listing) {
+        if (err)
+            res.send('Error searching for listings!');
+
+        var total = listing.length;
+        res.json({ total: total});
+    });
+}
+
+router.findTotalListingsByCategory = (req, res) => {
+
+    res.setHeader('Content-Type', 'application/json');
+
+    listings.find({ "category" : req.params.category },function(err, listing) {
+        if (err)
+            res.send('Error searching for category!');
+        else
+            var total = listing.length;
+            res.json({ total: total});
     });
 }
 
@@ -52,9 +79,9 @@ router.findByID = (req, res) => {
 
     listings.find({ "_id" : req.params.id },function(err, listing) {
         if (err)
-            res.send("Listing Not Found!");// return a suitable error message
+            res.send('Error searching by ID!');// return a suitable error message
         else
-            res.send(JSON.stringify(listing,null,5)); // return the donation
+            res.send(JSON.stringify(listing,null,5));
     });
 }
 
@@ -65,9 +92,9 @@ router.findByTitle = (req, res) => {
 
     listings.find({ "title" : req.params.title },function(err, listing) {
         if (err)
-            res.send(err);// return a suitable error message
+            res.send('Error searching by title!');// return a suitable error message
         else
-            res.send(JSON.stringify(listing,null,5)); // return the donation
+            res.send(JSON.stringify(listing,null,5));
     });
 }
 
@@ -77,9 +104,9 @@ router.findByCategory = (req, res) => {
 
     listings.find({ "category" : req.params.category },function(err, listing) {
         if (err)
-            res.send(err);// return a suitable error message
+            res.send('Error searching for category!');// return a suitable error message
         else
-            res.send(JSON.stringify(listing,null,5)); // return the donation
+            res.send(JSON.stringify(listing,null,5));
     });
 }
 
@@ -151,9 +178,9 @@ router.searchListings = (req, res) => {
 
         else
             var fuse = new Fuse(listing,options);
-            var result = fuse.search(req.body.searchCriteria);
+        var result = fuse.search(req.body.searchCriteria);
 
-            res.json({result});
+        res.json({result});
     });
 
 }
