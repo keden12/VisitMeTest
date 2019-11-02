@@ -114,6 +114,38 @@ before(async () => {
 	
 	
   describe("GET /listings", () => {
-   //TODO
+    it("should GET all the listings", done => {
+      request(server)
+        .get("/listings")
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(200)
+        .end((err, res) => {
+          try {
+            expect(res.body).to.be.a("array");
+            let result = _.map(res.body, listing => {
+              return {
+                title: listing.title
+              };
+            });
+            expect(result).to.deep.include({
+                title: "Project"
+            });
+            expect(result).to.deep.include({
+                title: "Factory"
+            });
+			expect(result).to.deep.include({
+                title: "Momo Restaurant"
+            });
+			expect(result).to.deep.include({
+                title: "The Dome"
+            });
+			expect(res.body.length).to.equal(4);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+    });
   });
 });
