@@ -150,7 +150,7 @@ before(async () => {
     });
   });
     describe("GET /listings/:id", () => {
-    describe("when the id is valid", () => {
+
       it("should return the matching listing", done => {
         request(server)
           .get(`/listings/${projectID}`)
@@ -171,6 +171,33 @@ before(async () => {
 			done(err);
           });
       });
-    });
+	
   });
+  
+    describe("GET /listings/title/:title", () => {
+      it("should return the matching listing", done => {
+        request(server)
+          .get(`/listings/title/Project`)
+          .set("Accept", "application/json")
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .end((err, res) => {
+            expect(res.body[0]).to.have.property("title", "Project");
+            expect(res.body[0]).to.have.property("category", "Nightclubs");
+			expect(res.body[0]).to.have.property("description", "Waterford’s premier live music venue for music acts from all genres; from pop, rock, jazz and RnB to deep house and much more.");
+			expect(res.body[0]).to.have.property("category", "Nightclubs");
+			expect(res.body[0]).to.have.property("website", "https://project.ticketabc.com/venues/project/");
+			expect(res.body[0]).to.have.property("mobile", "051582642");
+			expect(res.body[0]).to.have.property("location", "11-12 John Street, Waterford, Ireland");
+			expect(res.body[0]).to.have.property("featuredimage", "./images/project01.png");
+			expect(res.body[0]).to.have.property("featured", false);
+			expect(res.body[0]).to.have.property("facebook", "https://www.facebook.com/pg/ProjectVenueWaterford/");
+			done(err);
+          });
+      });
+  });
+ 
+  
+  
+  
 });
