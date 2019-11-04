@@ -342,6 +342,27 @@ before(async () => {
       });
   });
   
+   describe("PUT /listings/:id/changefeatured", () => {
+      it("should return a 200 and change the featured status to true", () => {
+		  
+         return request(server)
+          .put(`/listings/${projectID}/changefeatured`)
+          .expect(200)
+      });
+      after(() => {
+        return request(server)
+          .get(`/listings/${projectID}`)
+          .set("Accept", "application/json")
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .then(resp => {
+            expect(resp.body[0]).to.have.property("featured", true);
+          });
+      });
+  });
+  
+
+  
 
   
   
