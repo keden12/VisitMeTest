@@ -112,42 +112,22 @@ before(async () => {
     }
   }); 
 	
-	
-	
-  describe("GET /listings", () => {
-    it("should GET all the listings", done => {
-      request(server)
-        .get("/listings")
-        .set("Accept", "application/json")
-        .expect("Content-Type", /json/)
-        .expect(200)
-        .end((err, res) => {
-          try {
-			expect(res.body.length).to.equal(4);  
-            expect(res.body).to.be.a("array");
-            let result = _.map(res.body, listing => {
-              return {
-                title: listing.title
-              };
-            });
-            expect(result).to.deep.include({
-                title: "Project"
-            });
-            expect(result).to.deep.include({
-                title: "Factory"
-            });
-			expect(result).to.deep.include({
-                title: "Momo Restaurant"
-            });
-			expect(result).to.deep.include({
-                title: "The Dome"
-            });
-            done();
-          } catch (e) {
-            done(e);
-          }
-        });
-    });
+	describe("PUT /listings/:id/love", () => {
+      it("should return a 200 and hearts increment by 1", () => {
+         return request(server)
+          .put(`/listings/${projectID}/love`)
+          .expect(200)
+      });
+      after(() => {
+        return request(server)
+          .get(`/listings/${projectID}`)
+          .set("Accept", "application/json")
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .then(resp => {
+            expect(resp.body[0]).to.have.property("hearts", 1);
+          });
+      });
   });
   
 
@@ -226,6 +206,21 @@ before(async () => {
       });
   });
   
+  
+      describe("GET /listings/:category/total", () => {
+      it("should return the total number of listings in the category", done => {
+        request(server)
+          .get(`/listings/Nightclubs/total`)
+          .set("Accept", "application/json")
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .end((err, res) => {
+            expect(res.body.total).to.equal(2);
+			done(err);
+          });
+      });
+  });
+  
     describe("GET /listings/title/:title", () => {
       it("should return the matching listing", done => {
         request(server)
@@ -249,24 +244,47 @@ before(async () => {
       });
   });
   
+ 
   
-  
-    describe("GET /listings/:category/total", () => {
-      it("should return the total number of listings in the category", done => {
-        request(server)
-          .get(`/listings/Nightclubs/total`)
-          .set("Accept", "application/json")
-          .expect("Content-Type", /json/)
-          .expect(200)
-          .end((err, res) => {
-            expect(res.body.total).to.equal(2);
-			done(err);
-          });
-      });
+    describe("GET /listings", () => {
+    it("should GET all the listings", done => {
+      request(server)
+        .get("/listings")
+        .set("Accept", "application/json")
+        .expect("Content-Type", /json/)
+        .expect(200)
+        .end((err, res) => {
+          try {
+			expect(res.body.length).to.equal(4);  
+            expect(res.body).to.be.a("array");
+            let result = _.map(res.body, listing => {
+              return {
+                title: listing.title
+              };
+            });
+            expect(result).to.deep.include({
+                title: "Project"
+            });
+            expect(result).to.deep.include({
+                title: "Factory"
+            });
+			expect(result).to.deep.include({
+                title: "Momo Restaurant"
+            });
+			expect(result).to.deep.include({
+                title: "The Dome"
+            });
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+    });
   });
- 
   
- 
+
+  
+  
  
   
   
