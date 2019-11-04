@@ -362,6 +362,40 @@ before(async () => {
   });
   
 
+  describe("POST /listings", () => {
+    it("should return confirmation message and update datastore", () => {
+      const listing = {
+       title:"Test",
+      description:"Test is a test listing!",
+      category:"Pubs",
+	  website:"https://www.facebook.com/testsite/",
+	  mobile:"051854898",
+	  location:"35 John street, Waterford, Ireland",
+	  featuredimage: "./images/test01.png",
+	  gallery:["./images/test02.jpg"],
+	  featured:false,
+	  facebook:"https://www.facebook.com/test/",
+	  twitter:"",
+	  instagram:"https://www.instagram.com/test",
+      };
+      return request(server)
+        .post("/listings")
+        .send(listing)
+        .expect(200)
+        .then(res => {
+          expect(res.body.message).equals("Listing has been added successfully!");
+        });
+    });
+    after(() => {
+      return request(server)
+        .get(`/listings/title/Test`)
+        .expect(200)
+        .then(res => {
+          expect(res.body[0]).to.have.property("title", "Test");
+          expect(res.body[0]).to.have.property("category", "Pubs");
+        });
+    });
+  });
   
 
   
