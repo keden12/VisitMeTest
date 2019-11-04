@@ -149,6 +149,42 @@ before(async () => {
         });
     });
   });
+  
+      describe("GET /listings/category/:category", () => {
+      it("should return all listings from that category", done => {
+        request(server)
+          .get(`/listings/category/Nightclubs`)
+          .set("Accept", "application/json")
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .end((err, res) => {
+          try {
+			expect(res.body.length).to.equal(2);  
+            expect(res.body).to.be.a("array");
+            let result = _.map(res.body, listing => {
+              return {
+                title: listing.title
+              };
+            });
+            expect(result).to.deep.include({
+                title: "Project"
+            });
+            expect(result).to.deep.include({
+                title: "Factory"
+            });
+            done();
+          } catch (e) {
+            done(e);
+          }
+          });
+      });
+  });
+  
+  
+  
+  
+  
+  
     describe("GET /listings/:id", () => {
 
       it("should return the matching listing", done => {
@@ -196,8 +232,9 @@ before(async () => {
           });
       });
   });
- 
   
+ 
+ 
   
   
 });
