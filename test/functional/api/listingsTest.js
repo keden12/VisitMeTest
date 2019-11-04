@@ -112,25 +112,9 @@ before(async () => {
     }
   }); 
 	
-	describe("PUT /listings/:id/love", () => {
-      it("should return a 200 and hearts increment by 1", () => {
-         return request(server)
-          .put(`/listings/${projectID}/love`)
-          .expect(200)
-      });
-      after(() => {
-        return request(server)
-          .get(`/listings/${projectID}`)
-          .set("Accept", "application/json")
-          .expect("Content-Type", /json/)
-          .expect(200)
-          .then(resp => {
-            expect(resp.body[0]).to.have.property("hearts", 1);
-          });
-      });
-  });
   
-
+  
+  
   
       describe("GET /listings/category/:category", () => {
       it("should return all listings from that category", done => {
@@ -161,7 +145,6 @@ before(async () => {
           });
       });
   });
-  
   
   
   
@@ -280,6 +263,48 @@ before(async () => {
           }
         });
     });
+  });
+  
+   describe("PUT /listings/:id/changetitle", () => {
+      it("should return a 200 and change the listing title", () => {
+		  
+		const title = {
+        title: "Project Test"
+      };
+         return request(server)
+          .put(`/listings/${projectID}/changetitle`)
+		  .send(title)
+          .expect(200)
+      });
+      after(() => {
+        return request(server)
+          .get(`/listings/${projectID}`)
+          .set("Accept", "application/json")
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .then(resp => {
+            expect(resp.body[0]).to.have.property("title", "Project Test");
+          });
+      });
+  });
+  
+  
+    describe("PUT /listings/:id/love", () => {
+      it("should return a 200 and hearts increment by 1", () => {
+         return request(server)
+          .put(`/listings/${projectID}/love`)
+          .expect(200)
+      });
+      after(() => {
+        return request(server)
+          .get(`/listings/${projectID}`)
+          .set("Accept", "application/json")
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .then(resp => {
+            expect(resp.body[0]).to.have.property("hearts", 1);
+          });
+      });
   });
   
 
