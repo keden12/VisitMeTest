@@ -184,20 +184,6 @@ before(async () => {
   
   
   
-   describe("GET /listings/total", () => {
-      it("should return the total number of listings", done => {
-        request(server)
-          .get(`/listings/total`)
-          .set("Accept", "application/json")
-          .expect("Content-Type", /json/)
-          .expect(200)
-          .end((err, res) => {
-            expect(res.body.total).to.equal(4);
-			done(err);
-          });
-      });
-  });
-  
   
   
     describe("GET /listings/:id", () => {
@@ -225,6 +211,21 @@ before(async () => {
 	
   });
   
+  
+     describe("GET /listings/total", () => {
+      it("should return the total number of listings", done => {
+        request(server)
+          .get(`/listings/total`)
+          .set("Accept", "application/json")
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .end((err, res) => {
+            expect(res.body.total).to.equal(4);
+			done(err);
+          });
+      });
+  });
+  
     describe("GET /listings/title/:title", () => {
       it("should return the matching listing", done => {
         request(server)
@@ -248,6 +249,21 @@ before(async () => {
       });
   });
   
+  
+  
+    describe("GET /listings/:category/total", () => {
+      it("should return the total number of listings in the category", done => {
+        request(server)
+          .get(`/listings/Nightclubs/total`)
+          .set("Accept", "application/json")
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .end((err, res) => {
+            expect(res.body.total).to.equal(2);
+			done(err);
+          });
+      });
+  });
  
   
  
