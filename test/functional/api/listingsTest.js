@@ -9,8 +9,8 @@ const _ = require("lodash");
 let server;
 let mongod;
 let db;
-var projectID;
-
+var projectID, checkdb;
+checkdb = 0;
 let datastore = require("../../../models/listings");
 
 describe('Listings',  () => {
@@ -62,6 +62,7 @@ before(async () => {
 	  listing.twitter = "";
 	  listing.instagram = "";
       await listing.save();
+	  checkdb = checkdb+1;
       listing = new Listing();
       listing.title = "Momo Restaurant";
       listing.description = "Momo Restaurant offers international flavours using the best local ingredients. All our dishes are made from scrach with love and care. Enjoy a meal at Momo in a casual and relaxed atmosphere. We cater for all dietry needs- coeliac, dairy intolerant, vegetarians, etc.";
@@ -76,6 +77,7 @@ before(async () => {
 	  listing.twitter = "https://www.instagram.com/momowaterford/";
 	  listing.instagram = "https://twitter.com/momorestaurant";
       await listing.save();
+	  checkdb = checkdb+1;
 	  listing = new Listing();
       listing.title = "Factory";
       listing.description = "Factory is a Premium Nightclub venue!";
@@ -90,6 +92,7 @@ before(async () => {
 	  listing.twitter = "";
 	  listing.instagram = "https://www.instagram.com/factorywaterford/";
       await listing.save();
+	  checkdb = checkdb+1;
 	  listing = new Listing();
       listing.title = "Project";
       listing.description = "Waterford’s premier live music venue for music acts from all genres; from pop, rock, jazz and RnB to deep house and much more.";
@@ -104,6 +107,7 @@ before(async () => {
 	  listing.twitter = "";
 	  listing.instagram = "";
       await listing.save();
+	  checkdb = checkdb+1;
       listing = await Listing.findOne({ title:"Project" });
       projectID = listing._id;
 	  
@@ -112,10 +116,8 @@ before(async () => {
     }
   }); 
 	
-  
-  
-  
-  
+	
+	  
       describe("GET /listings/category/:category", () => {
       it("should return all listings from that category", done => {
         request(server)
@@ -175,19 +177,6 @@ before(async () => {
   });
   
   
-     describe("GET /listings/total", () => {
-      it("should return the total number of listings", done => {
-        request(server)
-          .get(`/listings/total`)
-          .set("Accept", "application/json")
-          .expect("Content-Type", /json/)
-          .expect(200)
-          .end((err, res) => {
-            expect(res.body.total).to.equal(4);
-			done(err);
-          });
-      });
-  });
   
   
       describe("GET /listings/:category/total", () => {
@@ -203,6 +192,7 @@ before(async () => {
           });
       });
   });
+  
   
     describe("GET /listings/title/:title", () => {
       it("should return the matching listing", done => {
@@ -227,9 +217,26 @@ before(async () => {
       });
   });
   
- 
   
-    describe("GET /listings", () => {
+  
+    
+       describe("GET /listings/total", () => {
+      it("should return the total number of listings", done => {
+        request(server)
+          .get(`/listings/total`)
+          .set("Accept", "application/json")
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .end((err, res) => {
+            expect(res.body.total).to.equal(4);
+			done(err);
+          });
+      });
+  });
+  
+  
+    
+  describe("GET /listings", () => {
     it("should GET all the listings", done => {
       request(server)
         .get("/listings")
@@ -264,6 +271,10 @@ before(async () => {
         });
     });
   });
+  
+  
+ 
+  
   
    describe("PUT /listings/:id/changetitle", () => {
       it("should return a 200 and change the listing title", () => {
@@ -307,6 +318,30 @@ before(async () => {
       });
   });
   
+  
+   describe("PUT /listings/:id/changedesc", () => {
+      it("should return a 200 and change the description", () => {
+		  
+		const description = {
+        description: "description test"
+      };
+         return request(server)
+          .put(`/listings/${projectID}/changedesc`)
+		  .send(description)
+          .expect(200)
+      });
+      after(() => {
+        return request(server)
+          .get(`/listings/${projectID}`)
+          .set("Accept", "application/json")
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .then(resp => {
+            expect(resp.body[0]).to.have.property("description", "description test");
+          });
+      });
+  });
+  
 
   
   
@@ -314,3 +349,15 @@ before(async () => {
   
   
 });
+
+
+
+
+
+  function wait(ms){
+   var start = new Date().getTime();
+   var end = start;
+   while(end < start + ms) {
+     end = new Date().getTime();
+  }
+}
