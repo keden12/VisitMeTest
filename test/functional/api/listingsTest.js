@@ -1,9 +1,11 @@
 const chai = require("chai");
 const expect = chai.expect;
+const chaiHttp = require('chai-http');
 const request = require("supertest");
 const MongoMemoryServer = require("mongodb-memory-server").MongoMemoryServer;
 const Listing = require("../../../models/listings");
 const mongoose = require("mongoose");
+chai.use(chaiHttp);
 
 const _ = require("lodash");
 let server;
@@ -151,7 +153,26 @@ before(async () => {
   
   
   
-    describe("GET /listings/:id", () => {
+  
+  
+  
+  
+      describe("GET /listings/:category/total", () => {
+      it("should return the total number of listings in the category", done => {
+        request(server)
+          .get(`/listings/Nightclubs/total`)
+          .set("Accept", "application/json")
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .end((err, res) => {
+            expect(res.body.total).to.equal(2);
+			done(err);
+          });
+      });
+  });
+  
+  
+      describe("GET /listings/:id", () => {
 
       it("should return the matching listing", done => {
         request(server)
@@ -174,23 +195,6 @@ before(async () => {
           });
       });
 	
-  });
-  
-  
-  
-  
-      describe("GET /listings/:category/total", () => {
-      it("should return the total number of listings in the category", done => {
-        request(server)
-          .get(`/listings/Nightclubs/total`)
-          .set("Accept", "application/json")
-          .expect("Content-Type", /json/)
-          .expect(200)
-          .end((err, res) => {
-            expect(res.body.total).to.equal(2);
-			done(err);
-          });
-      });
   });
   
   
@@ -415,13 +419,66 @@ before(async () => {
     });
   });
   
+  
+  
+  
+  describe('DELETE /listings/:id', function () {
+    describe('when id is valid', function () {
+        it('should return a confirmation message and delete the listing', function(done) {
+            chai.request(server)
+                .delete('/listings/${projectID}')
+                .end( (err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('message','Listing Deleted Successfully!' ) ;
+                    done();
+                });
+        });
+        after(function  (done) {
+            chai.request(server)
+                .get('/listings')
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body).be.be.a('array');
+                    let result = _.map(res.body, function (listing) {
+                        return { title: listing.title, 
+                            category: listing.category};
+                    }  );
+                    expect(result).to.not.include( { title: 'Project', category: 'Nightclubs'} );
+                    done();
+                });
+        });
+    });
+    describe('when id is invalid', function () {
+        it('should return an error message', function(done) {
+            chai.request(server)
+                .delete('/listings/142013')
+                .end( (err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('message','Listing Not Deleted!' ) ;
+                    done();
+                });
+        });
+    });
+  });
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  });
+  
 
   
   
  
   
   
-});
 
 
 
