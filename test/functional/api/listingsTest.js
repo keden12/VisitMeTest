@@ -397,6 +397,24 @@ before(async () => {
     });
   });
   
+  
+  
+    describe("POST /listings/search", () => {
+    it("should work like a fuzzy search so should return listings without full title", () => {
+      const search = {
+       searchCriteria:"Fac"
+      };
+      return request(server)
+        .post("/listings/search")
+        .send(search)
+        .expect(200)
+        .then(res => {
+          expect(res.body.result[0]).to.have.property("title", "Factory");
+		  expect(res.body.result.length).to.equal(1);
+        });
+    });
+  });
+  
 
   
   
