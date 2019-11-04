@@ -465,6 +465,38 @@ before(async () => {
   
   
   
+  describe('DELETE /listings/title/:title', function () {
+    describe('when title is valid', function () {
+        it('should return a confirmation message and delete the listing', function(done) {
+            chai.request(server)
+                .delete('/listings/title/Project')
+                .end( (err, res) => {
+                    expect(res).to.have.status(200);
+                    expect(res.body).to.have.property('message','Listing Deleted Successfully!' ) ;
+                    done();
+                });
+        });
+        after(function  (done) {
+            chai.request(server)
+                .get('/listings')
+                .end(function(err, res) {
+                    expect(res).to.have.status(200);
+                    expect(res.body).be.be.a('array');
+                    let result = _.map(res.body, function (listing) {
+                        return { title: listing.title, 
+                            category: listing.category};
+                    }  );
+                    expect(result).to.not.include( { title: 'Project', category: 'Nightclubs'} );
+                    done();
+                });
+        });
+    });
+  });
+  
+  
+  
+  
+  
   
   
   
