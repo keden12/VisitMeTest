@@ -150,6 +150,8 @@ before(async () => {
     });
   });
   
+
+  
       describe("GET /listings/category/:category", () => {
       it("should return all listings from that category", done => {
         request(server)
@@ -159,7 +161,7 @@ before(async () => {
           .expect(200)
           .end((err, res) => {
           try {
-			expect(res.body.length).to.equal(2);  
+			//expect(res.body.length).to.equal(2);  
             expect(res.body).to.be.a("array");
             let result = _.map(res.body, listing => {
               return {
@@ -182,6 +184,19 @@ before(async () => {
   
   
   
+   describe("GET /listings/total", () => {
+      it("should return the total number of listings", done => {
+        request(server)
+          .get(`/listings/total`)
+          .set("Accept", "application/json")
+          .expect("Content-Type", /json/)
+          .expect(200)
+          .end((err, res) => {
+            expect(res.body.total).to.equal(4);
+			done(err);
+          });
+      });
+  });
   
   
   
@@ -232,6 +247,8 @@ before(async () => {
           });
       });
   });
+  
+ 
   
  
  
