@@ -1,13 +1,13 @@
-const chai = require("chai")
+import chai from "chai"
 const expect = chai.expect
-const chaiHttp = require("chai-http")
-const request = require("supertest")
+import chaiHttp from "chai-http"
+import request from "supertest"
 const MongoMemoryServer = require("mongodb-memory-server").MongoMemoryServer
-const Listing = require("../../../models/listings")
-const mongoose = require("mongoose")
+import Listing from "../../../models/listings"
+import mongoose from "mongoose"
 chai.use(chaiHttp)
 
-const _ = require("lodash")
+import _  from "lodash"
 let server
 let mongod
 let db

@@ -2,3 +2,4 @@ file:
     - test/functional/api/listingsTest.js
 timeout: 6000
 exit: true
+require: '@babel/register'
