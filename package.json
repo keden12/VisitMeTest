@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "NODE_ENV=dev && node bin/www",
-    "test": "set NODE_ENV=test && mocha test/functional/api/listingsTest.js --timeout 0"
+    "test": "cross-env NODE_ENV=test mocha"
   },
   "dependencies": {
     "chai-http": "^4.3.0",
@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "chai": "^4.0.2",
+    "cross-env": "^6.0.3",
     "mocha": "^6.2.0",
     "supertest": "^4.0.2"
   }
